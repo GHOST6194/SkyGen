@@ -1,159 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SkyGen Network</title>
-  <style>
-    /* General page setup */
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: black;
-      color: white;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      position: relative;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyGen Network</title>
+    <style>
+        /* General styles */
+        body {
+            background-color: black;
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
 
-    /* Title setup with rainbow effect */
-    .title {
-      font-size: 4em;
-      font-weight: bold;
-      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      text-align: center;
-      margin-bottom: 30px;
-      animation: rainbow 3s infinite linear;
-      position: relative;
-      z-index: 1;
-    }
+        /* SkyGen text with rainbow light effect */
+        h1 {
+            text-align: center;
+            font-size: 4em;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            animation: rainbow 3s infinite alternate;
+        }
 
-    /* Buttons container */
-    .buttons {
-      display: flex;
-      justify-content: center;
-      z-index: 1;
-    }
+        @keyframes rainbow {
+            0% { color: red; }
+            14% { color: orange; }
+            28% { color: yellow; }
+            42% { color: green; }
+            57% { color: blue; }
+            71% { color: indigo; }
+            85% { color: violet; }
+            100% { color: red; }
+        }
 
-    /* Buttons styling */
-    .discord-button, .realm-button {
-      padding: 25px 50px;
-      font-size: 1.5em;
-      border: none;
-      cursor: pointer;
-      border-radius: 15px;
-      margin: 20px;
-      text-decoration: none;
-      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
-      background-size: 200% 100%;
-      background-position: right bottom;
-      transition: background-position 0.5s ease, transform 0.3s ease;
-      opacity: 0;
-      animation: fadeInButtons 1s ease-in-out forwards;
-    }
+        /* Navigation styles */
+        .tabs {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
 
-    /* Discord button specific styles */
-    .discord-button {
-      color: white;
-    }
+        .tab-button {
+            padding: 10px 20px;
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            margin-right: 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-    /* Realm button specific styles */
-    .realm-button {
-      color: white;
-    }
+        .tab-button:hover {
+            background-color: white;
+            color: black;
+        }
 
-    /* Button hover effect */
-    .discord-button:hover, .realm-button:hover {
-      background-position: left bottom;
-      transform: scale(1.1);
-    }
+        /* Content styles */
+        .content {
+            padding: 30px;
+            text-align: center;
+            display: none;
+        }
 
-    /* Fade in buttons animation */
-    @keyframes fadeInButtons {
-      0% { opacity: 0; }
-      50% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
+        .home {
+            display: block;
+        }
 
-    /* Rainbow animation for title */
-    @keyframes rainbow {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
+        /* Buttons */
+        .button {
+            padding: 15px 30px;
+            background-color: transparent;
+            border: 2px solid white;
+            color: white;
+            margin-top: 20px;
+            text-decoration: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-    /* Rain effect styles */
-    .rain {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-    }
+        .button:hover {
+            background-color: white;
+            color: black;
+        }
 
-    .rain .drop {
-      position: absolute;
-      background-color: rgba(255, 255, 255, 0.8);
-      width: 2px;
-      height: 15px;
-      animation: rain 0.5s infinite linear;
-    }
+        /* Cherry Blossom effect */
+        .cherry-blossoms {
+            position: absolute;
+            top: -10%;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
 
-    @keyframes rain {
-      to {
-        transform: translateY(100vh);
-      }
-    }
+        .cherry-petal {
+            position: absolute;
+            background-color: pink;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: fall 7s infinite linear;
+        }
 
-    /* Add drops randomly */
-    @keyframes createRain {
-      0% { top: -20px; }
-      100% { top: 100vh; }
-    }
-  </style>
+        @keyframes fall {
+            0% { top: -10px; left: random(100%); opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* Rain effect */
+        .rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+
+        .drop {
+            position: absolute;
+            background-color: white;
+            width: 2px;
+            height: 20px;
+            animation: rain 3s infinite linear; /* Slower rain */
+        }
+
+        @keyframes rain {
+            0% { top: -20px; }
+            100% { top: 100%; }
+        }
+    </style>
 </head>
 <body>
-  <!-- Title text -->
-  <div class="title">SkyGen Network</div>
+    <h1>SkyGen Network</h1>
+    
+    <div class="tabs">
+        <a href="#" class="tab-button" onclick="showContent('home')">Home</a>
+        <a href="#" class="tab-button" onclick="showContent('info')">Information</a>
+        <a href="#" class="tab-button" onclick="showContent('invites')">Invites</a>
+    </div>
 
-  <!-- Buttons -->
-  <div class="buttons">
-    <a href="https://discord.gg/QuBDvm9QFQ" class="discord-button">Discord</a>
-    <a href="https://realms.gg/ZrLixzGDWGs" class="realm-button">Join Realm</a>
-  </div>
+    <div id="home" class="content home">
+        <h2>Welcome to SkyGen Network!</h2>
+        <p>We are glad you're here! Explore the world of SkyGen and enjoy the unique Minecraft gameplay experience!</p>
+    </div>
 
-  <!-- Rain effect -->
-  <div class="rain">
-    <!-- Add 50 raindrops to the page -->
-    <div class="drop" style="left: 10%; animation-duration: 0.5s;"></div>
-    <div class="drop" style="left: 20%; animation-duration: 0.6s;"></div>
-    <div class="drop" style="left: 30%; animation-duration: 0.7s;"></div>
-    <div class="drop" style="left: 40%; animation-duration: 0.5s;"></div>
-    <div class="drop" style="left: 50%; animation-duration: 0.8s;"></div>
-    <div class="drop" style="left: 60%; animation-duration: 0.6s;"></div>
-    <div class="drop" style="left: 70%; animation-duration: 0.9s;"></div>
-    <div class="drop" style="left: 80%; animation-duration: 0.5s;"></div>
-    <div class="drop" style="left: 90%; animation-duration: 0.7s;"></div>
-    <!-- Add more drops if needed -->
-  </div>
+    <div id="info" class="content">
+        <h2>About SkyGen</h2>
+        <p>A Skygen is a type of Minecraft server game mode inspired by Skyblock but with a unique twist. In a Skygen server, players start on a small floating island, similar to Skyblock, but instead of gathering resources traditionally, they collect materials from specialized generators on their island. Here’s how it works:</p>
+        <p><strong>Generators:</strong> These are blocks that automatically generate resources like ores, blocks, or other valuable items over time. Players can stand on or near these generators to collect materials passively.</p>
+        <p><strong>Progression:</strong> The goal in Skygen is often to upgrade generators, tools, and island structures to gather resources faster and expand the island.</p>
+        <p><strong>PvP and Economy:</strong> Some Skygen servers add PvP areas or an in-game economy where players can sell or trade resources, adding competitive or cooperative elements to the gameplay.</p>
+        <p>Skygen is popular because it combines resource management and island expansion with a more automated and relaxed gameplay style compared to traditional Skyblock.</p>
+    </div>
 
-  <script>
-    // Generate more rain drops dynamically
-    for (let i = 0; i < 50; i++) {
-      const rainDrop = document.createElement('div');
-      rainDrop.classList.add('drop');
-      rainDrop.style.left = `${Math.random() * 100}%`;
-      rainDrop.style.animationDuration = `${Math.random() * 1 + 0.5}s`;
-      document.querySelector('.rain').appendChild(rainDrop);
-    }
-  </script>
+    <div id="invites" class="content">
+        <h2>Invites</h2>
+        <a href="https://discord.gg/QuBDvm9QFQ" class="button">Join Discord</a>
+        <a href="https://realms.gg/ZrLixzGDWGs" class="button">Join Realm</a>
+    </div>
+
+    <div class="cherry-blossoms"></div>
+    <div class="rain"></div>
+
+    <script>
+        // JavaScript for switching content
+        function showContent(content) {
+            document.querySelectorAll('.content').forEach(function (el) {
+                el.style.display = 'none';
+            });
+            document.getElementById(content).style.display = 'block';
+        }
+
+        // Generate random cherry blossoms falling
+        const cherryBlossoms = document.querySelector('.cherry-blossoms');
+        for (let i = 0; i < 50; i++) {
+            const petal = document.createElement('div');
+            petal.classList.add('cherry-petal');
+            cherryBlossoms.appendChild(petal);
+            petal.style.left = `${Math.random() * 100}%`;
+            petal.style.animationDuration = `${Math.random() * 5 + 5}s`;
+        }
+
+        // Create rain drops with slower animation
+        const rain = document.querySelector('.rain');
+        for (let i = 0; i < 100; i++) {
+            const drop = document.createElement('div');
+            drop.classList.add('drop');
+            rain.appendChild(drop);
+            drop.style.left = `${Math.random() * 100}%`;
+            drop.style.animationDuration = `${Math.random() * 2 + 2}s`; /* Slower rain */
+        }
+    </script>
 </body>
 </html>
