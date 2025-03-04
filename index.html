@@ -1,206 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkyGen Network</title>
-    <link rel="icon" href="favicon.png" type="image/png">
-    <style>
-        /* General styles */
-        body {
-            background-color: black;
-            font-family: Arial, sans-serif;
-            color: white;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyGen</title>
+  <!-- Minecraft Favicon -->
+  <link rel="icon" href="https://www.minecraft.net/favicon.ico" type="image/x-icon">
+  <style>
+    /* General Styling */
+    body {
+      background-color: #1e1e1e; /* default background */
+      color: white;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
+      text-align: center;
+      position: relative; /* For positioning background video */
+    }
 
-        /* SkyGen text with rainbow light effect */
-        h1 {
-            text-align: center;
-            font-size: 4em;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            animation: rainbow 3s infinite alternate;
-        }
+    /* Background Video */
+    video.background-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1; /* Ensure the video is in the background */
+      filter: blur(1px); /* Slight blur for background */
+    }
 
-        @keyframes rainbow {
-            0% { color: red; }
-            14% { color: orange; }
-            28% { color: yellow; }
-            42% { color: green; }
-            57% { color: blue; }
-            71% { color: indigo; }
-            85% { color: violet; }
-            100% { color: red; }
-        }
+    /* SkyGen Text in Top Left Corner */
+    .skygen-text {
+      font-size: 6rem;
+      color: #00bfff;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff, 0 0 30px #00bfff;
+      z-index: 2;
+    }
 
-        /* Navigation styles */
-        .tabs {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 1000;
-        }
+    /* Buttons - Square with Rounded Corners, Glowing */
+    button {
+      padding: 15px 25px;
+      background-color: transparent;
+      border: 3px solid #00bfff;
+      color: #00bfff;
+      font-size: 1.3rem;
+      cursor: pointer;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+      margin: 20px;
+      z-index: 2;
+    }
 
-        .tab-button {
-            padding: 10px 20px;
-            background-color: transparent;
-            border: 2px solid white;
-            color: white;
-            margin-right: 10px;
-            cursor: pointer;
-            font-size: 1.2em;
-            text-decoration: none;
-            transition: background-color 0.3s, color 0.3s;
-        }
+    button:hover {
+      background-color: #00bfff;
+      color: #fff;
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00bfff;
+    }
 
-        .tab-button:hover {
-            background-color: white;
-            color: black;
-        }
+    button:active {
+      transform: scale(0.95);
+      box-shadow: 0 0 30px #00bfff;
+    }
 
-        /* Content styles */
-        .content {
-            padding: 30px;
-            text-align: center;
-            display: none;
-        }
+    /* Pop-up Modals */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
 
-        .home {
-            display: block;
-        }
+    .popup-content {
+      background-color: #fff;
+      color: #000;
+      padding: 20px;
+      width: 50%;
+      text-align: center;
+      border-radius: 10px;
+    }
 
-        /* Buttons */
-        .button {
-            padding: 15px 30px;
-            background-color: transparent;
-            border: 2px solid white;
-            color: white;
-            margin-top: 20px;
-            text-decoration: none;
-            font-size: 1.5em;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
-        }
+    #closePopup {
+      padding: 10px 20px;
+      background-color: #1e90ff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
 
-        .button:hover {
-            background-color: white;
-            color: black;
-        }
+    #closePopup:hover { background-color: #4682b4; }
 
-        /* Cherry Blossom effect */
-        .cherry-blossoms {
-            position: absolute;
-            top: -10%;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 999;
-        }
+    /* Quotes Section */
+    .quotes {
+      margin-top: 50px;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: #fff;
+      display: none; /* Initially hide quotes */
+    }
 
-        .cherry-petal {
-            position: absolute;
-            background-color: pink;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            animation: fall 7s infinite linear;
-        }
-
-        @keyframes fall {
-            0% { top: -10px; left: random(100%); opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-        }
-
-        /* Rain effect */
-        .rain {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 998;
-        }
-
-        .drop {
-            position: absolute;
-            background-color: white;
-            width: 2px;
-            height: 20px;
-            animation: rain 3s infinite linear; /* Slower rain */
-        }
-
-        @keyframes rain {
-            0% { top: -20px; }
-            100% { top: 100%; }
-        }
-    </style>
+  </style>
 </head>
 <body>
-    <h1>SkyGen Network</h1>
-    
-    <div class="tabs">
-        <a href="#" class="tab-button" onclick="showContent('home')">Home</a>
-        <a href="#" class="tab-button" onclick="showContent('info')">Information</a>
-        <a href="#" class="tab-button" onclick="showContent('invites')">Invites</a>
+
+  <!-- Background Video -->
+  <video class="background-video" autoplay loop>
+    <source src="skygenvideo.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- SkyGen Text in Top Left Corner -->
+  <div class="skygen-text">SkyGen</div>
+
+  <!-- Navigation Buttons (Centered) -->
+  <div class="button-container">
+    <button id="infoButton">Info</button>
+    <button id="realmButton">Realm</button>
+    <button id="discordButton">Discord</button>
+  </div>
+
+  <!-- Info Popup -->
+  <div id="infoPopup" class="popup">
+    <div class="popup-content">
+      <h2>SkyGen Overview</h2>
+      <p>SkyGen is a Minecraft game mode where you spawn on a floating island with multiple generators. Gather resources, gear up, build your plot, and compete in parkour, mazes, PvP, tournaments, and more!</p>
+      <button id="closePopup">Close</button>
     </div>
+  </div>
 
-    <div id="home" class="content home">
-        <h2>Welcome to SkyGen Network!</h2>
-        <p>We are glad you're here! Explore the world of SkyGen and enjoy the unique Minecraft gameplay experience!</p>
+  <!-- Realm Popup -->
+  <div id="realmPopup" class="popup">
+    <div class="popup-content">
+      <h2>Join SkyGen Realm</h2>
+      <p>Click below to join the SkyGen realm and start your adventure!</p>
+      <a href="https://realms.gg/ZrLixzGDWGs" target="_blank">
+        <button>Join Realm</button>
+      </a>
+      <button id="closePopup">Close</button>
     </div>
+  </div>
 
-    <div id="info" class="content">
-        <h2>About SkyGen</h2>
-        <p>A Skygen is a type of Minecraft server game mode inspired by Skyblock but with a unique twist. In a Skygen server, players start on a small floating island, similar to Skyblock, but instead of gathering resources traditionally, they collect materials from specialized generators on their island. Here’s how it works:</p>
-        <p><strong>Generators:</strong> These are blocks that automatically generate resources like ores, blocks, or other valuable items over time. Players can stand on or near these generators to collect materials passively.</p>
-        <p><strong>Progression:</strong> The goal in Skygen is often to upgrade generators, tools, and island structures to gather resources faster and expand the island.</p>
-        <p><strong>PvP and Economy:</strong> Some Skygen servers add PvP areas or an in-game economy where players can sell or trade resources, adding competitive or cooperative elements to the gameplay.</p>
-        <p>Skygen is popular because it combines resource management and island expansion with a more automated and relaxed gameplay style compared to traditional Skyblock.</p>
+  <!-- Discord Popup -->
+  <div id="discordPopup" class="popup">
+    <div class="popup-content">
+      <h2>Join Our Discord</h2>
+      <p>Join our Discord to get the latest updates and chat with the community!</p>
+      <a href="https://discord.gg/Ugj9Dmzkht" target="_blank">
+        <button>Join Discord</button>
+      </a>
+      <button id="closePopup">Close</button>
     </div>
+  </div>
 
-    <div id="invites" class="content">
-        <h2>Invites</h2>
-        <a href="https://discord.gg/QuBDvm9QFQ" class="button">Join Discord</a>
-        <a href="https://realms.gg/ZrLixzGDWGs" class="button">Join Realm</a>
-    </div>
+  <!-- Quotes Section -->
+  <div id="quote1" class="quotes" style="color: #00bfff;">"A heart is like a bedrock... The only thing that can destroy them is a cheat..."</div>
+  <div id="quote2" class="quotes" style="color: #ff6347;">"To reach the end, you must go through he||."</div>
+  <div id="quote3" class="quotes" style="color: #32cd32;">"Technoblade never dies."</div>
+  <div id="quote4" class="quotes" style="color: #ff1493;">"Minecraft, a game where the only limit is your imagination."</div>
 
-    <div class="cherry-blossoms"></div>
-    <div class="rain"></div>
+  <script>
+    // --- Pop-up Functionality for Info, Realm, and Discord ---
+    const infoButton = document.getElementById('infoButton');
+    const realmButton = document.getElementById('realmButton');
+    const discordButton = document.getElementById('discordButton');
+    const infoPopup = document.getElementById('infoPopup');
+    const realmPopup = document.getElementById('realmPopup');
+    const discordPopup = document.getElementById('discordPopup');
+    const closePopup = document.getElementById('closePopup');
 
-    <script>
-        // JavaScript for switching content
-        function showContent(content) {
-            document.querySelectorAll('.content').forEach(function (el) {
-                el.style.display = 'none';
-            });
-            document.getElementById(content).style.display = 'block';
-        }
+    infoButton.addEventListener('click', () => { infoPopup.style.display = 'flex'; });
+    realmButton.addEventListener('click', () => { realmPopup.style.display = 'flex'; });
+    discordButton.addEventListener('click', () => { discordPopup.style.display = 'flex'; });
 
-        // Generate random cherry blossoms falling
-        const cherryBlossoms = document.querySelector('.cherry-blossoms');
-        for (let i = 0; i < 50; i++) {
-            const petal = document.createElement('div');
-            petal.classList.add('cherry-petal');
-            cherryBlossoms.appendChild(petal);
-            petal.style.left = `${Math.random() * 100}%`;
-            petal.style.animationDuration = `${Math.random() * 5 + 5}s`;
-        }
+    closePopup.addEventListener('click', () => {
+      infoPopup.style.display = 'none';
+      realmPopup.style.display = 'none';
+      discordPopup.style.display = 'none';
+    });
 
-        // Create rain drops with slower animation
-        const rain = document.querySelector('.rain');
-        for (let i = 0; i < 100; i++) {
-            const drop = document.createElement('div');
-            drop.classList.add('drop');
-            rain.appendChild(drop);
-            drop.style.left = `${Math.random() * 100}%`;
-            drop.style.animationDuration = `${Math.random() * 2 + 2}s`; /* Slower rain */
-        }
-    </script>
+    // --- Display Quotes one after another ---
+    function showQuotes() {
+      setTimeout(() => { document.getElementById('quote1').style.display = 'block'; }, 1000);
+      setTimeout(() => { document.getElementById('quote1').style.display = 'none'; }, 6000);
+      setTimeout(() => { document.getElementById('quote2').style.display = 'block'; }, 7000);
+      setTimeout(() => { document.getElementById('quote2').style.display = 'none'; }, 12000);
+      setTimeout(() => { document.getElementById('quote3').style.display = 'block'; }, 13000);
+      setTimeout(() => { document.getElementById('quote3').style.display = 'none'; }, 18000);
+      setTimeout(() => { document.getElementById('quote4').style.display = 'block'; }, 19000);
+      setTimeout(() => { document.getElementById('quote4').style.display = 'none'; }, 24000);
+    }
+
+    showQuotes(); // Call the function to start showing quotes
+  </script>
+
 </body>
 </html>
