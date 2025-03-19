@@ -1,240 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SkyGen</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <style>
-    body {
-      background-color: #1e1e1e;
-      color: white;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      overflow: hidden;
-      text-align: center;
-      position: relative;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyGen Network</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
 
-    .video-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-    }
+        body {
+            background-color: #000; /* Full black background */
+            color: #fff;
+            text-align: center;
+            overflow-x: hidden;
+            padding-top: 80px; /* Room for the fixed header */
+        }
 
-    .skygen-text {
-      font-size: 6rem;
-      color: #00bfff;
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff, 0 0 30px #00bfff;
-      z-index: 2;
-    }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #000; /* Black header */
+            padding: 20px;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .welcome-text {
-      font-size: 3rem;
-      color: white;
-      margin-top: 80px;
-      z-index: 2;
-      text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff, 0 0 30px #00bfff;
-    }
+        /* SkyGen text with stronger glowing effect */
+        .skygen-text {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 15px #00b3ff, 0 0 30px #00b3ff, 0 0 45px #00b3ff, 0 0 60px #00b3ff; /* Stronger Glowing effect */
+        }
 
-    .buttons {
-      position: absolute;
-      top: 40%;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      z-index: 2;
-    }
+        /* Navigation Bar */
+        .top-nav {
+            display: flex;
+            gap: 20px;
+        }
 
-    .buttons button {
-      padding: 12px 20px;
-      background-color: transparent;
-      border: 3px solid #00bfff;
-      color: #00bfff;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-      border-radius: 8px;
-    }
+        .top-nav a {
+            text-decoration: none;
+            color: #fff;
+            padding: 15px 25px;
+            background-color: #000; /* Black background for links */
+            border-radius: 5px;
+            font-size: 1.2rem; /* Increased font size */
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        }
 
-    .buttons button:hover {
-      background-color: #00bfff;
-      color: #1e1e1e;
-      transform: scale(1.1);
-    }
+        .top-nav a:hover {
+            background-color: #00b3ff; /* Glowing blue */
+            box-shadow: 0 0 15px #00b3ff, 0 0 30px #00b3ff, 0 0 40px #00b3ff; /* Stronger glow */
+            animation: bounce 0.3s ease;
+            transform: scale(1.05); /* Slightly enlarge on hover */
+        }
 
-    .color-changer {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background-color: #1e1e1e;
-      border: none;
-      padding: 10px;
-      cursor: pointer;
-      color: white;
-      font-size: 1.2rem;
-      border-radius: 5px;
-      z-index: 3;
-      transition: background-color 0.3s ease;
-    }
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
 
-    .color-changer:hover {
-      background-color: #00bfff;
-    }
+        .content {
+            margin-top: 60px; /* Space for fixed header */
+            padding: 20px;
+            animation: fadeIn 1s ease-out;
+        }
 
-    .color-options {
-      display: none;
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      background-color: #333333;
-      padding: 10px;
-      border-radius: 5px;
-      z-index: 4;
-      display: grid;
-      grid-template-columns: repeat(10, 40px);
-      gap: 10px;
-    }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
 
-    .color-option {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 2px solid #fff;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
 
-    .color-option:hover {
-      transform: scale(1.2);
-    }
+        .boosting ul {
+            list-style-type: none;
+            margin: 20px 0;
+            padding: 0;
+        }
 
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.7);
-      justify-content: center;
-      align-items: center;
-      color: white;
-      text-align: center;
-      z-index: 5;
-    }
+        .boosting li {
+            margin-bottom: 10px;
+        }
 
-    .modal-content {
-      background-color: #333333;
-      padding: 20px;
-      border-radius: 10px;
-      width: 80%;
-      max-width: 600px;
-    }
+        .links button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #000; /* Black button */
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
 
-    .close-btn {
-      background-color: #ff0000;
-      color: white;
-      padding: 10px 20px;
-      cursor: pointer;
-      border-radius: 5px;
-      margin-top: 10px;
-      transition: background-color 0.3s ease;
-    }
+        .links button:hover {
+            background-color: #00b3ff;
+            box-shadow: 0 0 10px #00b3ff, 0 0 20px #00b3ff; /* Glowing effect */
+            animation: bounce 0.3s ease;
+        }
 
-    .close-btn:hover {
-      background-color: #cc0000;
-    }
+        footer {
+            background-color: #000; /* Black footer */
+            color: #fff;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            text-align: center;
+        }
 
-  </style>
+        /* Content Animation */
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Glowing effect for links */
+        .links button:hover {
+            color: #fff;
+            background-color: #00b3ff;
+            text-shadow: 0 0 10px #00b3ff, 0 0 20px #00b3ff, 0 0 30px #00b3ff; /* Added glow to button text */
+        }
+    </style>
 </head>
 <body>
 
-  <video class="video-background" autoplay loop muted>
-    <source src="video.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+    <header>
+        <div class="skygen-text">
+            SkyGen Network
+        </div>
+        <div class="top-nav">
+            <a href="#home">Home</a>
+            <a href="#boosting">Boosting Perks</a>
+            <a href="#links" id="linksButton">Links</a>
+        </div>
+    </header>
 
-  <div class="welcome-text">Welcome to SkyGen</div>
-  <div class="skygen-text">SkyGen</div>
+    <div class="content">
+        <!-- Home Section -->
+        <div id="home">
+            <h1>Welcome to SkyGen Network!</h1>
+            <p>Make sure to join our SkyGen, the best SkyGen in MCBE!</p>
+        </div>
 
-  <div class="buttons">
-    <button onclick="window.open('https://discord.gg/Ugj9Dmzkht', '_blank');">Join Discord</button>
-    <button onclick="window.open('https://realms.gg/ZrLixzGDWGs', '_blank');">Join Realm</button>
-    <button onclick="openInfoModal()">Info</button>
-  </div>
+        <!-- Boosting Perks Section -->
+        <div id="boosting" class="boosting" style="display: none;">
+            <h2>💎 Boosting Perks 💎</h2>
+            <ul>
+                <li>💎 <strong>Monthly Reward:</strong> 20 million on the realm for boosting the server for a full month and maintaining the boost.</li>
+                <li>🗣️ <strong>Supporter Chat:</strong> Gain access to the <strong>Supporter Chat</strong> to interact with other boosters and staff.</li>
+                <li>🏆 <strong>GOAT Role:</strong> Receive the <strong>GOAT</strong> role as recognition for being an amazing supporter!</li>
+                <li>🎉 And much more...</li>
+            </ul>
+            <p>Boost the server and enjoy these awesome perks!</p>
+        </div>
 
-  <button class="color-changer" onclick="toggleColorOptions()">🎨</button>
-
-  <div class="color-options" id="colorOptions">
-    <!-- Generating a large number of colors -->
-    <div class="color-option" style="background-color: #ff0000;" onclick="changeBackgroundColor('#ff0000')"></div>
-    <div class="color-option" style="background-color: #00ff00;" onclick="changeBackgroundColor('#00ff00')"></div>
-    <div class="color-option" style="background-color: #0000ff;" onclick="changeBackgroundColor('#0000ff')"></div>
-    <div class="color-option" style="background-color: #ffff00;" onclick="changeBackgroundColor('#ffff00')"></div>
-    <div class="color-option" style="background-color: #ff00ff;" onclick="changeBackgroundColor('#ff00ff')"></div>
-    <div class="color-option" style="background-color: #00ffff;" onclick="changeBackgroundColor('#00ffff')"></div>
-    <div class="color-option" style="background-color: #ffffff;" onclick="changeBackgroundColor('#ffffff')"></div>
-    <div class="color-option" style="background-color: #000000;" onclick="changeBackgroundColor('#000000')"></div>
-    <div class="color-option" style="background-color: #800000;" onclick="changeBackgroundColor('#800000')"></div>
-    <div class="color-option" style="background-color: #808000;" onclick="changeBackgroundColor('#808000')"></div>
-    <div class="color-option" style="background-color: #008000;" onclick="changeBackgroundColor('#008000')"></div>
-    <div class="color-option" style="background-color: #000080;" onclick="changeBackgroundColor('#000080')"></div>
-    <div class="color-option" style="background-color: #800080;" onclick="changeBackgroundColor('#800080')"></div>
-    <div class="color-option" style="background-color: #008080;" onclick="changeBackgroundColor('#008080')"></div>
-    <div class="color-option" style="background-color: #c0c0c0;" onclick="changeBackgroundColor('#c0c0c0')"></div>
-    <div class="color-option" style="background-color: #f0f0f0;" onclick="changeBackgroundColor('#f0f0f0')"></div>
-    <div class="color-option" style="background-color: #a52a2a;" onclick="changeBackgroundColor('#a52a2a')"></div>
-    <div class="color-option" style="background-color: #d2691e;" onclick="changeBackgroundColor('#d2691e')"></div>
-    <div class="color-option" style="background-color: #ff7f50;" onclick="changeBackgroundColor('#ff7f50')"></div>
-  </div>
-
-  <div class="modal" id="infoModal">
-    <div class="modal-content">
-      <h2>About SkyGen</h2>
-      <p>SkyGen is a unique Minecraft experience designed for players to generate resources, sell them for in-game currency, and progress through a series of features and challenges. There are shops for buying and selling, effect and kit shops, and fun activities like parkours, mazes, and mini-games. Players can use their earned currency to upgrade their experience and access special areas like VIP plots, pet shops, and more!</p>
-      <button class="close-btn" onclick="closeInfoModal()">Close</button>
+        <!-- Links Section -->
+        <div id="links" class="links" style="display: none;">
+            <h2>Useful Links:</h2>
+            <button id="discordButton" class="link-button" onclick="window.open('https://discord.gg/NFR8J78dWQ', '_blank')">Join our Discord</button>
+            <button id="realmButton" class="link-button" onclick="window.open('https://realms.gg/ZrLixzGDWGs', '_blank')">Join our Realm</button>
+            <button id="staffAppButton" class="link-button" onclick="window.open('https://forms.gle/yuY7uDA2ZPPbVSoS9', '_blank')">Staff Applications</button>
+        </div>
     </div>
-  </div>
 
-  <script>
-    let currentColorIndex = 0;
-    const colors = ['#1e1e1e', '#2f2f2f', '#333333', '#4a4a4a', '#595959'];
+    <footer>
+        &copy; 2025 SkyGen Network | All rights reserved
+    </footer>
 
-    function changeBackgroundColor(color) {
-      document.body.style.backgroundColor = color;
-      currentColorIndex = (currentColorIndex + 1) % colors.length;
-    }
+    <script>
+        // Navigation Button Click Events
+        document.querySelector('a[href="#boosting"]').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('home').style.display = 'none';
+            document.getElementById('boosting').style.display = 'block';
+            document.getElementById('links').style.display = 'none';
+        });
 
-    function toggleColorOptions() {
-      const colorOptions = document.getElementById('colorOptions');
-      colorOptions.style.display = (colorOptions.style.display === 'grid') ? 'none' : 'grid';
-    }
+        document.querySelector('a[href="#links"]').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('home').style.display = 'none';
+            document.getElementById('boosting').style.display = 'none';
+            document.getElementById('links').style.display = 'block';
+        });
 
-    function openInfoModal() {
-      const modal = document.getElementById('infoModal');
-      modal.style.display = 'flex';
-    }
-
-    function closeInfoModal() {
-      const modal = document.getElementById('infoModal');
-      modal.style.display = 'none';
-    }
-  </script>
+        document.querySelector('a[href="#home"]').addEventListener('click', function(event) {
+            event.preventDefault();
+            document.getElementById('home').style.display = 'block';
+            document.getElementById('boosting').style.display = 'none';
+            document.getElementById('links').style.display = 'none';
+        });
+    </script>
 
 </body>
 </html>
